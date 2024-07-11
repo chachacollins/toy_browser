@@ -1,4 +1,4 @@
-use std::{char, collections::HashMap, string};
+use std::{ collections::HashMap, char};
 
 struct Node {
     children: Vec<Node>,
@@ -55,6 +55,25 @@ impl Parser {
         cur_char
 
     }
+    fn consume_while<F>(&mut self, test: F) -> String where F: Fn(char) -> bool {
+        let mut result = String::new();
+        while !self.eos() && test(self.next_char()) {
+            result.push(self.consume_char());
+            
+        }
+        return result;
+    }
+fn consume_whitespace(&mut self) {
+    self.consume_while(char::is_whitespace);
+}
+
+// Parse a tag or attribute name.
+fn parse_tag_name(&mut self) -> String {
+    self.consume_while(|c| match c {
+        'a'..='z' | 'A'..='Z' | '0'..='9' => true,
+        _ => false
+    })
+}
 }
 
 fn main() {
